@@ -71,7 +71,7 @@ impl<T> LinkedList<T> {
     }
 	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
     where
-    
+    T: std::cmp::PartialOrd,
 	{
 		//TODO
 		let mut list_c = LinkedList::<T>::new();
