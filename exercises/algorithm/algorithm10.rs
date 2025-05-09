@@ -2,7 +2,7 @@
 	graph
 	This problem requires you to implement a basic graph functio
 */
-// I AM NOT DONE
+
 
 use std::collections::{HashMap, HashSet};
 use std::fmt;
@@ -30,6 +30,22 @@ impl Graph for UndirectedGraph {
     }
     fn add_edge(&mut self, edge: (&str, &str, i32)) {
         //TODO
+        let (from_node, to_node, weight) = edge;
+        let from_node = from_node.to_string();
+        let to_node = to_node.to_string();
+        unsafe{
+            let table = self.adjacency_table_mutable();
+            if !table.contains_key(&from_node) {
+                table.insert(from_node.clone(), Vec::new());
+            }
+            if !table.contains_key(&to_node) {
+                table.insert(to_node.clone(), Vec::new());
+            }
+            if let Some(val) = table.get_mut(&from_node) { val.push((to_node.clone(), weight)); };
+            if let Some(val) = table.get_mut(&to_node) { val.push((from_node.clone(), weight)); };
+        }
+        
+
     }
 }
 pub trait Graph {
@@ -38,9 +54,32 @@ pub trait Graph {
     fn adjacency_table(&self) -> &HashMap<String, Vec<(String, i32)>>;
     fn add_node(&mut self, node: &str) -> bool {
         //TODO
+        let node = node.to_string();
+        let table = self.adjacency_table_mutable();
+        if table.contains_key(&node) {
+            return false;
+        }
+        table.insert(node.clone(), Vec::new());
 		true
     }
     fn add_edge(&mut self, edge: (&str, &str, i32)) {
+        let (from_node, to_node, weight) = edge;
+        let from_node = from_node.to_string();
+        let to_node = to_node.to_string();
+        let table = self.adjacency_table_mutable();
+        if !table.contains_key(&from_node) {
+            table.insert(from_node.clone(), Vec::new());
+        }
+        if !table.contains_key(&to_node) {
+            table.insert(to_node.clone(), Vec::new());
+        }
+        if let Some(val) = table.get_mut(&from_node) {
+            val.push((to_node.clone(), weight));
+        }
+        if let Some(val) = table.get_mut(&to_node) {
+            val.push((from_node.clone(), weight));
+        }
+
         //TODO
     }
     fn contains(&self, node: &str) -> bool {
